@@ -8,8 +8,8 @@ import GameGrid from "@/components/GameGrid.vue"
 const minRows = 4
 const minCols = 4
 
-const maxRows = 4
-const maxCols = 4
+const maxRows = 8
+const maxCols = 8
 
 const data = reactive({
   rows: 0,
