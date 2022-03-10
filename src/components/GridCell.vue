@@ -32,7 +32,7 @@ watch(
   }
 )
 
-function onMouseDown(mouseButton: MouseButton) {
+function onMouseDown(mouseButton?: MouseButton) {
   if (!props.disabled) {
     // left click
     if (mouseButton === MouseButton.Left) {
@@ -94,7 +94,7 @@ function onMouseOver() {
       'bg-white': data.state === CellState.Empty,
       'bg-black': data.state === CellState.Active,
       'bg-gray-400': data.state === CellState.Marked,
-      'border-transparent': disabled,
+      'border-0': disabled,
     }"
     @click.right.prevent
     @mousedown="onMouseDown($event.button)"

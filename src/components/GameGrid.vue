@@ -180,13 +180,18 @@ function handleMouseUp() {
     <div class="border-bottom flex">
       <div
         class="flex flex-col justify-center border"
-        :style="{ width: maximumRowHintWidth }"
+        :class="{ 'border-l-0 border-t-0': solved }"
+        :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
       />
 
       <div
         v-for="(hints, index) in columnHints"
         :key="index"
         class="flex flex-col justify-end w-7 border text-center"
+        :class="{
+          'border-t-0': solved,
+          'border-r-0': index === columnHints.length - 1 && solved,
+        }"
       >
         <template v-if="hints.length">
           <div
@@ -206,7 +211,11 @@ function handleMouseUp() {
     <Transition>
       <div
         class="flex items-center justify-end border pr-2"
-        :style="{ width: maximumRowHintWidth }"
+        :class="{
+          'border-l-0': solved,
+          'border-b-0': rowIndex === data.matrix.length - 1 && solved,
+        }"
+        :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
       >
         <p>
           {{ getRowHint(rowIndex) }}
@@ -221,6 +230,10 @@ function handleMouseUp() {
       :action-effect="data.actionEffect"
       :disabled="solved"
       v-model:value="row[index]"
+      :class="{
+        'border-t': rowIndex === 0 && solved,
+        'border-l': index === 0 && solved,
+      }"
       @mouse-down="handleMouseDown"
       @mouse-up="handleMouseUp"
     />
