@@ -57,6 +57,7 @@ function onTransitionFinished() {
 
 async function generateGame() {
   data.solution = []
+  clearInterval(data.timer)
 
   await nextTick(() => {
     data.rows = getRandomNumberBetween(minRows, maxRows)
