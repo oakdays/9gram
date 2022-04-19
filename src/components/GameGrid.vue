@@ -6,11 +6,12 @@ import { Action, ActionEffect, CellState, MouseButton } from "@/utils/enums"
 import GridCell from "@/components/GridCell.vue"
 
 const props = defineProps<{
+  clearing: boolean
   solution: Array<number>[]
   solved: boolean
 }>()
 
-const emit = defineEmits(["solved"])
+const emit = defineEmits(["clear", "solved"])
 
 const data = reactive({
   matrix: [] as Array<Array<number>>,
@@ -56,6 +57,21 @@ watch(
           }
         }
       }
+    })
+  }
+)
+
+watch(
+  () => props.clearing,
+  () => {
+    nextTick(() => {
+      for (let i in data.matrix) {
+        for (let j in data.matrix[i]) {
+          data.matrix[i][j] = 0
+        }
+      }
+
+      emit("clear")
     })
   }
 )

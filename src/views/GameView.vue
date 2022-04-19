@@ -15,6 +15,7 @@ const data = reactive({
   rows: 0,
   columns: 0,
   solved: false,
+  clearing: false,
   resetting: true,
   solution: [] as Array<number>[],
   startingTime: new Date().getTime(),
@@ -121,16 +122,19 @@ async function updateClipboard(newClip: string) {
 
       <div :class="{ border: !data.solved, 'border-2': data.solved }">
         <game-grid
+          :clearing="data.clearing"
           :solution="data.solution"
           :solved="data.solved"
+          @clear="data.clearing = false"
           @solved="data.solved = true"
         />
       </div>
 
       <div class="flex justify-between mt-8 items-center">
-        <time class="text-xl" :datetime="formattedTimePassed">{{
-          formattedTimePassed
-        }}</time>
+        <time class="text-xl" :datetime="formattedTimePassed">
+          {{ formattedTimePassed }}</time
+        >
+
         <button
           v-if="data.solved"
           class="px-2 py-1 transition-colors"
@@ -141,6 +145,14 @@ async function updateClipboard(newClip: string) {
           @click="share"
         >
           share
+        </button>
+
+        <button
+          v-else
+          class="px-2 py-1 bg-cyan-500 text-white"
+          @click="data.clearing = true"
+        >
+          clear
         </button>
       </div>
     </main>
