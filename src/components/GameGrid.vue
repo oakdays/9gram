@@ -32,6 +32,8 @@ watch(
         if (!isMatrixValid) break
       }
 
+      if (!isMatrixValid) return
+
       for (let i = 0; i < columnHints.value.length; i++) {
         isMatrixValid = validateLine(
           columnHints.value[i],
