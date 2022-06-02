@@ -1,0 +1,46 @@
+import { describe, expect, it } from "vitest"
+import { validateLine } from "@/utils/validators"
+
+describe("validators", () => {
+  describe("validateLine", () => {
+    it("returns true with valid input", () => {
+      expect(validateLine([1, 1], [1, 0, 1])).toBe(true)
+      expect(validateLine([1, 2], [1, 0, 1, 1])).toBe(true)
+      expect(validateLine([1, 2], [1, 0, 0, 1, 1])).toBe(true)
+      expect(validateLine([3, 1, 3], [1, 1, 1, 0, 1, 0, 1, 1, 1])).toBe(true)
+      expect(validateLine([3, 1], [1, 1, 1, 0, 1])).toBe(true)
+      expect(validateLine([3, 1], [1, 1, 1, 0, 0, 1])).toBe(true)
+      expect(validateLine([2, 2], [1, 1, 0, 1, 1])).toBe(true)
+      expect(validateLine([2, 1], [1, 1, 0, 0, 1, 0, 0, 0])).toBe(true)
+      expect(validateLine([4, 1, 1], [1, 1, 1, 1, 0, 1, 0, 1])).toBe(true)
+      expect(validateLine([5, 1], [0, 1, 1, 1, 1, 1, 0, 1])).toBe(true)
+      expect(validateLine([1, 1, 1], [0, 1, 0, 1, 0, 1, 0, 0])).toBe(true)
+      expect(validateLine([2], [1, 1, 0, 0])).toBe(true)
+      expect(validateLine([4], [1, 1, 1, 1])).toBe(true)
+      expect(validateLine([2], [0, 1, 1, 0])).toBe(true)
+      expect(validateLine([1, 1], [1, 0, 1, 0])).toBe(true)
+      expect(validateLine([3], [0, 1, 1, 1])).toBe(true)
+      expect(validateLine([0], [0, 0, 0, 0])).toBe(true)
+      expect(validateLine([1], [0, 1, 0, 0, 0, 0, 0])).toBe(true)
+      expect(validateLine([3, 1], [1, 1, 1, 0, 1, 0, 0])).toBe(true)
+      expect(validateLine([2], [0, 0, 0, 0, 1, 1, 0])).toBe(true)
+      expect(validateLine([1, 1], [0, 1, 0, 0, 1, 0, 0])).toBe(true)
+      expect(validateLine([1, 1], [0, 1, 0, 1, 0])).toBe(true)
+      expect(validateLine([0], [0, 0, 0, 0, 0])).toBe(true)
+      expect(validateLine([0], [2, 2, 2, 2, 2])).toBe(true)
+      expect(validateLine([4], [0, 1, 1, 1, 1])).toBe(true)
+      expect(validateLine([1], [0, 0, 1, 0, 0])).toBe(true)
+      expect(validateLine([1, 1], [0, 1, 0, 1])).toBe(true)
+      expect(validateLine([1], [0, 0, 0, 1])).toBe(true)
+    })
+
+    it("returns false with invalid input", () => {
+      expect(validateLine([1, 1], [1, 1])).toBe(false)
+      expect(validateLine([1, 2], [1, 0, 1])).toBe(false)
+      expect(validateLine([1, 2], [1, 0, 1, 0])).toBe(false)
+      expect(validateLine([1, 2], [1])).toBe(false)
+      expect(validateLine([3, 2, 1], [1, 1, 0, 1, 1, 0, 1])).toBe(false)
+      expect(validateLine([1, 3, 1], [1, 0, 1, 1, 1, 0, 1, 1])).toBe(false)
+    })
+  })
+})

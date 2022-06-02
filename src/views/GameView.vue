@@ -76,7 +76,7 @@ async function generateGame() {
 
     data.startingTime = new Date().getTime()
     data.timePassed = 0
-    data.timer = setInterval(() => {
+    data.timer = window.setInterval(() => {
       data.timePassed = new Date().getTime() - data.startingTime
     }, 1)
   })

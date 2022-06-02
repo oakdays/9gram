@@ -2,6 +2,8 @@
 import { computed, nextTick, reactive, watch } from "vue"
 
 import { Action, ActionEffect, CellState, MouseButton } from "@/utils/enums"
+import { removeZeros } from "@/utils/filters"
+import { validateLine } from "@/utils/validators"
 
 import GridCell from "@/components/GridCell.vue"
 
@@ -23,22 +25,23 @@ watch(
   () => data.matrix,
   (newValue) => {
     nextTick(() => {
-      let isEqual = true
+      let isMatrixValid = true
 
-      for (let i in newValue) {
-        for (let j in newValue[i]) {
-          if (
-            (newValue[i][j] === 1 && newValue[i][j] !== props.solution[i][j]) ||
-            (newValue[i][j] !== 1 && props.solution[i][j] === 1)
-          ) {
-            isEqual = false
-            break
-          }
-        }
-        if (!isEqual) break
+      for (let i = 0; i < rowHints.value.length; i++) {
+        isMatrixValid = validateLine(rowHints.value[i], newValue[i])
+        if (!isMatrixValid) break
       }
 
-      if (isEqual) emit("solved")
+      for (let i = 0; i < columnHints.value.length; i++) {
+        isMatrixValid = validateLine(
+          columnHints.value[i],
+          getMatrixColumnValues(i)
+        )
+
+        if (!isMatrixValid) break
+      }
+
+      if (isMatrixValid) emit("solved")
     })
   },
   { deep: true }
@@ -92,11 +95,14 @@ watch(
   }
 )
 
-function removeZeros(hints: Array<number>[]) {
-  hints.forEach((hintGroup, index) => {
-    hints[index] = hintGroup.filter((hint) => hint > 0)
-  })
-  return hints
+function getMatrixColumnValues(index: number): Array<number> {
+  let values = []
+
+  for (let i = 0; i < data.matrix.length; i++) {
+    values.push(data.matrix[i][index])
+  }
+
+  return values
 }
 
 const rowHints = computed(() => {
@@ -105,11 +111,11 @@ const rowHints = computed(() => {
   for (let i in props.solution) {
     hints.push([])
     for (let j in props.solution[i]) {
-      if (props.solution[i][j] == 1) {
+      if (props.solution[i][j] === 1) {
         if (hints[i].length == 0) hints[i].push(1)
         else hints[i][hints[i].length - 1]++
       } else {
-        if (hints[i].length > 0) hints[i].push(0)
+        hints[i].push(0)
       }
     }
   }
