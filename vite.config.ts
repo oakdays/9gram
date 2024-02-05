@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from "url"
 
 import { defineConfig } from "vite"
+import { configDefaults } from "vitest/config"
 import vue from "@vitejs/plugin-vue"
 
 // https://vitejs.dev/config/
@@ -10,5 +11,8 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
+  },
+  test: {
+    exclude: [...configDefaults.exclude, "tests-e2e", "tests-examples"],
   },
 })
