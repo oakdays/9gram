@@ -5,7 +5,7 @@ import { Action, ActionEffect, CellState, MouseButton } from "@/utils/enums"
 
 const props = defineProps<{
   disabled: boolean
-  value: number
+  value: CellState
   actionBeingDone: Action
   actionEffect: ActionEffect
 }>()
@@ -13,14 +13,14 @@ const props = defineProps<{
 const emit = defineEmits(["update:value", "mouseDown", "mouseUp"])
 
 const data = reactive({
-  state: ref<CellState>(CellState.Empty),
+  state: CellState.Empty,
 })
 
 watch(
   () => props.value,
   (newValue) => {
     data.state = newValue
-  }
+  },
 )
 
 watch(
@@ -29,7 +29,7 @@ watch(
     nextTick(() => {
       emit("update:value", newState)
     })
-  }
+  },
 )
 
 function onMouseDown(mouseButton?: MouseButton) {
