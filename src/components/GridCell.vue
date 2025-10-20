@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, reactive, ref, watch } from "vue"
+import { nextTick, reactive, watch } from "vue"
 
 import { Action, ActionEffect, CellState, MouseButton } from "@/utils/enums"
 

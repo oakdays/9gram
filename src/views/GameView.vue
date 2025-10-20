@@ -49,7 +49,7 @@ watch(
     if (newValue) {
       clearInterval(data.timer)
     }
-  }
+  },
 )
 
 function onTransitionFinished() {

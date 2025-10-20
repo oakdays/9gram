@@ -37,7 +37,7 @@ watch(
       for (let i = 0; i < columnHints.value.length; i++) {
         isMatrixValid = validateLine(
           columnHints.value[i],
-          getMatrixColumnValues(i)
+          getMatrixColumnValues(i),
         )
 
         if (!isMatrixValid) break
@@ -46,7 +46,7 @@ watch(
       if (isMatrixValid) emit("solved")
     })
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -54,8 +54,8 @@ watch(
   (newValue) => {
     nextTick(() => {
       if (newValue) {
-        for (let i in data.matrix) {
-          for (let j in data.matrix[i]) {
+        for (const i in data.matrix) {
+          for (const j in data.matrix[i]) {
             if (data.matrix[i][j] === 2) {
               data.matrix[i][j] = 0
             }
@@ -63,22 +63,22 @@ watch(
         }
       }
     })
-  }
+  },
 )
 
 watch(
   () => props.clearing,
   () => {
     nextTick(() => {
-      for (let i in data.matrix) {
-        for (let j in data.matrix[i]) {
+      for (const i in data.matrix) {
+        for (const j in data.matrix[i]) {
           data.matrix[i][j] = 0
         }
       }
 
       emit("clear")
     })
-  }
+  },
 )
 
 watch(
@@ -94,11 +94,11 @@ watch(
         }
       }
     })
-  }
+  },
 )
 
 function getMatrixColumnValues(index: number): Array<number> {
-  let values = []
+  const values = []
 
   for (let i = 0; i < data.matrix.length; i++) {
     values.push(data.matrix[i][index])
@@ -108,31 +108,33 @@ function getMatrixColumnValues(index: number): Array<number> {
 }
 
 const rowHints = computed(() => {
-  let hints: Array<number>[] = []
+  const hints: number[][] = []
 
-  for (let i in props.solution) {
-    hints.push([])
-    for (let j in props.solution[i]) {
+  for (let i = 0; i < props.solution.length; i++) {
+    const currentRow: number[] = []
+    for (let j = 0; j < props.solution[i].length; j++) {
       if (props.solution[i][j] === 1) {
-        if (hints[i].length == 0) hints[i].push(1)
-        else hints[i][hints[i].length - 1]++
+        if (currentRow.length === 0) currentRow.push(1)
+        else currentRow[currentRow.length - 1]++
       } else {
-        hints[i].push(0)
+        currentRow.push(0)
       }
     }
+    hints.push(currentRow)
   }
 
   return removeZeros(hints)
 })
 
 const columnHints = computed(() => {
-  let hints: Array<number>[] = []
+  const hints: number[][] = []
 
-  for (let i in props.solution) {
-    for (let j in props.solution[i]) {
-      if (!hints[j]) hints[j] = [props.solution[i][j]]
-      else {
-        if (props.solution[i][j] == 1) hints[j][hints[j].length - 1]++
+  for (let i = 0; i < props.solution.length; i++) {
+    for (let j = 0; j < props.solution[i].length; j++) {
+      if (!hints[j]) {
+        hints[j] = [props.solution[i][j]]
+      } else {
+        if (props.solution[i][j] === 1) hints[j][hints[j].length - 1]++
         else hints[j].push(props.solution[i][j])
       }
     }
@@ -200,52 +202,48 @@ function handleMouseUp() {
 </script>
 
 <template>
-  <Transition>
-    <div class="border-bottom flex">
-      <div
-        class="flex flex-col justify-center border"
-        :class="{ 'border-l-0 border-t-0': solved }"
-        :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
-      />
+  <div class="border-bottom flex">
+    <div
+      class="flex flex-col justify-center border"
+      :class="{ 'border-l-0 border-t-0': solved }"
+      :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
+    />
 
-      <div
-        v-for="(hints, index) in columnHints"
-        :key="index"
-        class="flex flex-col justify-end w-7 border text-center"
-        :class="{
-          'border-t-0': solved,
-          'border-r-0': index === columnHints.length - 1 && solved,
-        }"
-      >
-        <template v-if="hints.length">
-          <div
-            v-for="(hint, hintIndex) in hints"
-            :key="hintIndex"
-            :class="{ 'pt-5': hintIndex === 0 }"
-          >
-            {{ hint }}
-          </div>
-        </template>
-        <template v-else> 0 </template>
-      </div>
+    <div
+      v-for="(hints, index) in columnHints"
+      :key="index"
+      class="flex flex-col justify-end w-7 border text-center"
+      :class="{
+        'border-t-0': solved,
+        'border-r-0': index === columnHints.length - 1 && solved,
+      }"
+    >
+      <template v-if="hints.length">
+        <div
+          v-for="(hint, hintIndex) in hints"
+          :key="hintIndex"
+          :class="{ 'pt-5': hintIndex === 0 }"
+        >
+          {{ hint }}
+        </div>
+      </template>
+      <template v-else> 0 </template>
     </div>
-  </Transition>
+  </div>
 
   <div class="flex" v-for="(row, rowIndex) in data.matrix" :key="rowIndex">
-    <Transition>
-      <div
-        class="flex items-center justify-end border pr-2"
-        :class="{
-          'border-l-0': solved,
-          'border-b-0': rowIndex === data.matrix.length - 1 && solved,
-        }"
-        :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
-      >
-        <p>
-          {{ getRowHint(rowIndex) }}
-        </p>
-      </div>
-    </Transition>
+    <div
+      class="flex items-center justify-end border pr-2"
+      :class="{
+        'border-l-0': solved,
+        'border-b-0': rowIndex === data.matrix.length - 1 && solved,
+      }"
+      :style="{ width: maximumRowHintWidth, minWidth: '40px' }"
+    >
+      <p>
+        {{ getRowHint(rowIndex) }}
+      </p>
+    </div>
 
     <grid-cell
       v-for="(value, index) in row"
