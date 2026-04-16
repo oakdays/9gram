@@ -25,6 +25,8 @@ watch(
   () => data.matrix,
   (newValue) => {
     nextTick(() => {
+      if (newValue.length === 0) return
+
       let isMatrixValid = true
 
       for (let i = 0; i < rowHints.value.length; i++) {
