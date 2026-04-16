@@ -2,6 +2,11 @@
 import { computed, nextTick, onMounted, reactive, watch } from "vue"
 
 import { getRandomNumberBetween } from "@/utils/random"
+import {
+  computeColumnHints,
+  computeRowHints,
+  hasUniqueSolution,
+} from "@/utils/solver"
 
 import GameGrid from "@/components/GameGrid.vue"
 
@@ -64,13 +69,24 @@ async function generateGame() {
     data.rows = getRandomNumberBetween(minRows, maxRows)
     data.columns = getRandomNumberBetween(minCols, maxCols)
 
-    for (let i = 0; i < data.rows; i++) {
-      data.solution.push([])
-      for (let j = 0; j < data.columns; j++) {
-        data.solution[i].push(getRandomNumberBetween(0, 1))
+    let solution: number[][] = []
+    let unique = false
+
+    while (!unique) {
+      solution = []
+      for (let i = 0; i < data.rows; i++) {
+        solution.push([])
+        for (let j = 0; j < data.columns; j++) {
+          solution[i].push(getRandomNumberBetween(0, 1))
+        }
       }
+      unique = hasUniqueSolution(
+        computeRowHints(solution),
+        computeColumnHints(solution),
+      )
     }
 
+    data.solution = solution
     data.solved = false
     data.resetting = false
 
